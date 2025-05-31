@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Category</title>
+</head>
+<body class=" transition-colors duration-300">
+<div id="content" class="p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Add Category Form -->
+        <section class="lg:col-span-1 bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6">
+            <!--            message alert-->
+            <div th:replace="~{message :: messageBox}">
+            </div>
+            <h2 class="text-2xl font-semibold mb-4">Edit Category</h2>
+            <form th:action="@{'/admin/updateCategory'}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="space-y-4">
+                <div>
+                    <label for="categoryName" class="block text-sm font-medium">Category Name</label>
+                    <input type="text" id="categoryName" name="name" th:value="${category.name}" required
+                           placeholder="e.g. Electronics"
+                           class="mt-1 block w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <input type="hidden" name="id" th:value="${category.id}">
+                <div class="space-y-2">
+                    <label class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                    <div class="flex space-x-6">
+                        <!-- Active Radio Button -->
+                        <div class="flex items-center">
+                            <input type="radio" id="flex-radioDefaultTrue" name="isActive" value="true"
+                                   th:checked="${category.isActive==true}"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600">
+                            <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                   for="flex-radioDefaultTrue">Active</label>
+                        </div>
+                        <!-- Inactive Radio Button -->
+                        <div class="flex items-center">
+                            <input type="radio" id="flex-radioDefaultFalse" name="isActive" value="false"
+                                   th:checked="${category.isActive==false}"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600">
+                            <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                   for="flex-radioDefaultFalse">Inactive</label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload
+                        Image</label>
+                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50
+                                dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                           aria-describedby="user_avatar_help"
+                           id="user_avatar" name="file" type="file">
+                </div>
+                <div>
+                    <img th:src="@{'/img/category_img/'+ ${category.imageName}}" alt="Category Image"
+                         class="w-20 h-20 mx-auto object-cover rounded shadow-md">
+                </div>
+
+                <div class="mb-4 text-center px-6 py-3">
+                    <button type="submit" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
+                                dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                        Update Category
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<div id="script">
+    <script>
+        console.log("Edit Category Page Loaded");
+    </script>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>View Cart</title>
+</head>
+<body>
+
+<div id="content">
+    <div class="grid grid-cols-3 mt-4 px-2 "></div>
+    <section class="col-span-3 bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-6 mb-4 mt-4 mr-4 ml-4 overflow-auto">
+        <div class="mx-auto text-center">
+            <h2 class="text-2xl font-bold font-mono italic mb-4 ">User Cart Page</h2>
+        </div>
+        <div th:replace="~{message :: messageBox}" class="md:w-1/2 mx-auto"> </div>
+        <table class="min-w-full text-sm text-left" >
+            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase tracking-wider">
+            <div th:if="${#lists.isEmpty(carts)}" class="md:w-1/2 mx-auto text-center text-2xl text-gray-500 dark:text-gray-400">
+                   User Not Added Product in the Cart
+            </div>
+            <tr th:unless="${#lists.isEmpty(carts)}">
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Sr. No</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Product Image</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Product Name</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Price</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Quantity</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Total Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Thymeleaf loop -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" th:each="cart ,c : ${carts}">
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${c.count}">1</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <img th:src="@{'/img/product_img/'+ ${cart.product.imageName}}" alt="User Image"
+                         class="w-12 h-12 object-cover rounded shadow-md">
+                </td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${cart.product.title}"></td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${cart.product.discountPrice}">
+                </td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-2">
+                        <!-- Decrement button (minus) -->
+                        <a th:href="@{'/user/cartQuantityUpdate?sy=decrease&cid='+${cart.id}}"
+                           class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600"
+                           aria-label="Decrease quantity">
+                            <svg class="w-4 h-4 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                            </svg>
+                        </a>
+
+                        <!-- Quantity display -->
+                        <span class="w-10 text-center font-medium text-gray-900 dark:text-white">
+      [[${cart.quantity}]]
+    </span>
+
+                        <!-- Increment button (plus) -->
+                        <a th:href="@{'/user/cartQuantityUpdate?sy=increase&cid='+${cart.id}}"
+                           class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600"
+                           aria-label="Increase quantity">
+                            <svg class="w-4 h-4 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                            </svg>
+                        </a>
+                    </div>
+                </td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${cart.totalPrice}"></td>
+            </tr>
+            <tr th:if="${carts.size()>0}">
+                <td colspan="4"></td>
+                <td class="px-4 py-3 font-mono font-bold italic text-lg">Total Amount of Ordered Price</td>
+                <td class="px-4 py-3 font-semibold text-lg font-mono italic" >Rs. <span th:text="${totalAmountPrice}" class="text-lg font-sans font-semibold "></span> PKR</td>
+            </tr>
+            </tbody>
+        </table>
+        <th:block th:if="${user !=null && carts.size()>0}">
+            <div class="flex text-center justify-center  mt-4">
+                <a th:href="@{'/user/placeOrder'}" type="button" class="text-yellow-400 hover:text-white border border-yellow-400 hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-yellow-300 dark:text-yellow-300 dark:hover:text-white dark:hover:bg-yellow-400 dark:focus:ring-yellow-900">
+                    Proceed to Payment
+                </a>
+            </div>
+        </th:block>
+    </section>
+</div>
+
+<div id="script">
+    <script th:src="@{'https://cdn.jsdelivr.net/npm/sweetalert2@11'}"></script>
+    <script th:src="@{/js/deleteSweetAlert.js}"></script>
+    <script>
+        console.log("View Users Page Loaded");
+    </script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::#content}, ~{::title}, ~{::#script})}">
+
+<head>
+    <title>Dashboard</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+<div id="content">
+    <div class="text-center p-8">
+        <h1 class="text-3xl text-gray-800 dark:text-gray-200 font-bold mb-2">Admin Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-400">Manage your store efficiently</p>
+    </div>
+
+    <section id="dashboard" class="max-w-6xl mx-auto p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Add Product Card -->
+            <div class="bg-gray-300 dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
+                <a th:href="@{'/admin/addProduct'}" class="block p-6">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-green-100 dark:bg-green-900/30 p-4 rounded-full mb-4">
+                            <i class="fa-solid fa-square-plus text-green-600 fa-2x"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">Add Product</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Create new product listings</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Add Category Card -->
+            <div class="bg-gray-300 dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
+                <a th:href="@{'/admin/addCategory'}" class="block p-6">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full mb-4">
+                            <i class="fa-solid fa-list text-blue-600 fa-2x"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">Add Category</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Organize your products</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- View Products Card -->
+            <div class="bg-gray-300 dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
+                <a th:href="@{'/admin/viewProducts'}" class="block p-6">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full mb-4">
+                            <i class="fa-solid fa-table-list text-blue-400 fa-2x"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">View Products</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Browse and manage inventory</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Orders Card -->
+            <div class="bg-gray-300 dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
+                <a th:href="@{'/admin/orders'}" class="block p-6">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-yellow-100 dark:bg-yellow-900/30 p-4 rounded-full mb-4">
+                            <i class="fa-solid fa-box-open text-yellow-500 fa-2x"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">Orders</h3>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">200 pending</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Users Card -->
+            <div class="bg-gray-300 dark:bg-gray-900 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700 sm:col-span-2">
+                <a th:href="@{'/admin/users'}" class="block p-6">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-indigo-100 dark:bg-indigo-900/30 p-4 rounded-full mb-4">
+                            <i class="fa-solid fa-circle-user text-indigo-600 fa-2x"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">User Management</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">View and manage all users</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div id="script">
+    <script>
+        console.log("Admin Dashboard Page Loaded");
+    </script>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Products</title>
+</head>
+<body>
+
+<div id="content" class="mt-4">
+    <section class="bg-gray-200 dark:bg-gray-900 shadow-xl/30 rounded-2xl p-6 mt-6 ml-4 mr-4 mb-4">
+        <form
+                id="orderPlaceForm"
+                th:action="@{'/user/saveOrder'}"
+                method="post"
+                novalidate
+        >
+            <div class="w-full md:w-1/2 mx-auto text-center">
+                <div th:replace="~{message :: messageBox}">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Address Section -->
+                <section id="fill-address" class="space-y-6">
+                    <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Shipping Information</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Please fill in your shipping information</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">First
+                                Name</label>
+                            <input type="text" id="firstName" name="firstName" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="John">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last
+                                Name</label>
+                            <input type="text" id="lastName" name="lastName" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="Doe">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="email"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <input type="email" id="email" name="email" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="john@example.com">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="mobileNo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mobile
+                                no</label>
+                            <input type="text" id="mobileNo" name="mobileNumber" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="+92 312-234567">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="address"
+                               class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+                        <input type="text" id="address" name="address" required
+                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                               placeholder="123 Main Street">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <label for="city"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">City</label>
+                            <input type="text" id="city" name="city" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="Gujranwala">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="state"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
+                            <input type="text" id="state" name="state" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="Punjab">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="pinCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pin
+                                Code</label>
+                            <input type="text" id="pinCode" name="pinCode" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="75431">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Payment Section -->
+                <section id="paymentSection" class="space-y-6">
+                    <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Order Summary</h1>
+
+                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Subtotal:</span>
+                                <span class="font-medium" th:text="${subTotal}"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Delivery Charges:</span>
+                                <span class="font-medium">Rs. 250</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Tax:</span>
+                                <span class="font-medium">Rs. 150</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                                <div class="flex justify-between">
+                                    <span class="text-lg font-semibold">Total:</span>
+                                    <span class="text-lg font-bold" th:text="${totalPrice}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label for="paymentMethod"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Payment
+                                Method</label>
+                            <select id="paymentMethod" name="paymentMethod" required
+                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                <option value="">Select Payment Method</option>
+                                <option value="Cash On Delivery">Cash On Delivery</option>
+<!--                                <option value="Online Payment">Online Payment</option>-->
+                            </select>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 text-white font-medium rounded-lg transition duration-200">
+                            Place Order
+                        </button>
+                        <!--                        <button type="button"-->
+                        <!--                                class="w-full px-6 py-3 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-900 dark:focus:ring-blue-800">-->
+                        <!--                            Place Order-->
+                        <!--                        </button>-->
+
+                    </div>
+                </section>
+            </div>
+        </form>
+    </section>
+</div>
+
+<div id="script">
+    <script>
+        console.log("Order Products Page Loaded");
+    </script>
+</div>
+
+</body>
+</html>

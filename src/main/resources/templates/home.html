@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}">
+
+<head>
+    <title>Home Page</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+
+<div id="content">
+
+    <!-- Hero Banner -->
+    <section class="hero-gradient text-white py-20 wow animate__animated animate__fadeIn">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0 wow animate__animated animate__fadeInLeft">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Summer Collection 2025</h1>
+                <p class="text-xl mb-6">Discover our latest products with exclusive discounts up to 50% off</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/products" class="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-6 rounded-lg text-center transition wow animate__animated animate__pulse animate__infinite animate__slower">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center wow animate__animated animate__fadeInRight">
+                <img th:src="@{'/img/homePage/ecom1.png'}" alt="Fashion Collection" class="max-h-80 rounded-lg shadow-xl">
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Section -->
+    <section class="py-16 bg-gray-100 dark:bg-gray-700 wow animate__animated animate__fadeIn" data-wow-delay="0.1s">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-12 wow animate__animated animate__fadeInDown">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Shop by Category</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore our wide range of product categories</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div th:each="category : ${categories}" class="wow animate__animated animate__zoomIn">
+                    <a th:href="@{'/products?category=' + ${category.name}}"
+                       class="category-card group bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg dark:hover:shadow-gray-700 transition p-4 text-center block">
+                        <div class="bg-gray-200 dark:bg-gray-800 rounded p-4 mb-3 mx-auto w-full h-48 flex items-center justify-center">
+                            <img loading="lazy" th:src="@{'/img/category_img/' + ${category.imageName}}"
+                                 th:alt="${category.name}"
+                                 class="w-full h-48 rounded-lg object-contain">
+                        </div>
+                        <p class="font-semibold text-gray-800 dark:text-gray-200" th:text="${category.name}"></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 group-hover:text-blue-500">Shop Now →</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Products -->
+    <section id="featured" class="py-16 bg-gray-300 dark:bg-gray-800 wow animate__animated animate__fadeIn" data-wow-delay="0.2s">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-12 wow animate__animated animate__fadeInDown">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Latest Products</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Our latest products this season</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div th:each="product : ${products}"
+                     class="product-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden group wow animate__animated animate__fadeInUp"
+                >
+                    <div class="relative">
+                        <a th:href="@{'/productDetails/' + ${product.id}}">
+                            <img th:src="@{'/img/product_img/' + ${product.imageName}}"
+                                 th:alt="${product.title}"
+                                 loading="lazy"
+                                 class="w-full h-48 object-contain p-4">
+                            <div th:if="${product.discount > 0}" class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                <span th:text="${product.discount} + '% OFF'"></span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <a th:href="@{'/productDetails/' + ${product.id}}">
+                            <h4 class="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-2 hover:text-blue-600" th:text="${product.title}"></h4>
+                        </a>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 dark:text-blue-400 font-bold" th:text="'Rs. ' + ${product.discountPrice}"></span>
+                            <span th:if="${product.discount > 0}" class="text-sm text-gray-500 dark:text-gray-400 line-through" th:text="'Rs. ' + ${product.price}"></span>
+                        </div>
+                        <div class="mt-3">
+                            <a th:href="@{'/productDetails/' + ${product.id}}" class="block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition wow animate__animated animate__pulse animate__infinite animate__slow">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12 wow animate__animated animate__fadeInUp" data-wow-delay="0.3s">
+                <a href="/products" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition">
+                    Browse All Products
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Scripts -->
+<div id="script">
+    <script th:src="@{'/js/wow.min.js'}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',function () {
+            new WOW().init();
+        });
+        console.log("Loaded wow animation");
+    </script>
+</div>
+
+</body>
+</html>

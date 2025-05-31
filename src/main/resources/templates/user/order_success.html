@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content">
+    <div class="text-center mx-auto  gap-8 mt-5 md:mt-20">
+        <i class="fa-solid fa-circle-check fa-5x text-green-600"></i>
+        <h2 class="text-2xl font-semibold mb-4">Product Ordered Successfully</h2>
+        <p class="text-md font-semibold mb-4">The Product will be delivered within 7 Days</p>
+        <div class="flex justify-center flex-col md:flex-row gap-4">
+            <a th:href="@{'/home'}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                Home Page
+            </a>
+            <a th:href="@{'/user/viewOrders'}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                Your Orders
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div id="script">
+    <script>
+        console.log("Order Success Page Loaded");
+    </script>
+</div>
+</body>
+</html>

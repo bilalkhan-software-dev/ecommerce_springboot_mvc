@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>My Orders</title>
+</head>
+<body>
+<div id="content">
+  <section class="bg-white dark:bg-gray-900 shadow-sm rounded-lg p-6 mx-4 my-6">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Order History</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">View and manage your recent orders</p>
+      </div>
+      <div class="flex items-center space-x-2">
+
+      </div>
+    </div>
+
+    <div th:replace="~{message :: messageBox}" class="md:w-1/2 mx-auto"></div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(orders)}" class="text-center py-12">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">No orders found</h3>
+      <p class="mt-2 text-gray-500 dark:text-gray-400">You haven't placed any orders yet.</p>
+      <a th:href="@{/products}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        Start Shopping
+      </a>
+    </div>
+
+    <!-- Orders Table -->
+    <div th:unless="${#lists.isEmpty(orders)}" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-800">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order #</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+        <tr th:each="order : ${orders}" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-blue-600 dark:text-blue-400" th:text="${order.orderId}"></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900 dark:text-gray-200" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy')}"></div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img th:if="${order.product.imageName}" th:src="@{'/img/product_img/'+${order.product.imageName}}" class="h-10 w-10 rounded-md object-cover" alt="Product image">
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900 dark:text-white" th:text="${order.product.title}"></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              <div>Qty: <span th:text="${order.quantity}" class="font-medium text-gray-700 dark:text-gray-300"></span></div>
+              <div>Price: <span th:text="${'$' + order.price}" class="font-medium text-gray-700 dark:text-gray-300"></span></div>
+              <div>Total: <span th:text="${'$' + (order.price * order.quantity)}" class="font-medium text-gray-900 dark:text-white"></span></div>
+            </div>
+          </td>
+          <td class="px-4 py-3 font-medium whitespace-nowrap">
+              <span th:text="${order.status}"></span>
+
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
+
+            <th:block th:if="${order.status != 'Cancelled'}">
+                <button th:onclick="updateOrderStatus([[${order.id}]],6)"
+                        class="text-gray-100  bg-red-700 hover:bg-red-900 rounded-lg w-full px-6 py-3">
+                  Cancel Order
+                </button>
+            </th:block>
+            <th:block th:unless="${order.status != 'Cancelled'}">
+                <button
+                        class="text-gray-100  bg-gray-700 hover:bg-gray-900 rounded-lg w-full px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed" disabled="disabled">
+                  Cancel Order
+                </button>
+            </th:block>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+<!--      <div class="bg-white dark:bg-gray-900 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6 mt-4">-->
+<!--        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">-->
+<!--          <div>-->
+<!--            <p class="text-sm text-gray-700 dark:text-gray-300">-->
+<!--              Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">20</span> results-->
+<!--            </p>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">-->
+<!--              <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">-->
+<!--                <span class="sr-only">Previous</span>-->
+<!--                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
+<!--                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />-->
+<!--                </svg>-->
+<!--              </a>-->
+<!--              <a href="#" aria-current="page" class="z-10 bg-blue-50 dark:bg-blue-900 border-blue-500 dark:border-blue-700 text-blue-600 dark:text-blue-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium">-->
+<!--                1-->
+<!--              </a>-->
+<!--              <a href="#" class="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium">-->
+<!--                2-->
+<!--              </a>-->
+<!--              <a href="#" class="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium">-->
+<!--                3-->
+<!--              </a>-->
+<!--              <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">-->
+<!--                <span class="sr-only">Next</span>-->
+<!--                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
+<!--                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />-->
+<!--                </svg>-->
+<!--              </a>-->
+<!--            </nav>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+  </section>
+</div>
+
+<div id="script">
+  <script th:src="@{'https://cdn.jsdelivr.net/npm/sweetalert2@11'}"></script>
+  <script th:src="@{/js/deleteSweetAlert.js}"></script>
+  <script>
+    console.log("View Users Page Loaded");
+  </script>
+</div>
+
+</body>
+</html>

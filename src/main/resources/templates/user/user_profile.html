@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.fullName} + ' Profile Page'"></title>
+</head>
+<body>
+
+<div id="content">
+    <div class="max-w-4xl mx-auto p-4 space-y-8">
+        <!-- Profile Section -->
+        <section id="profile-section" class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden">
+            <div class="p-6">
+                <div class="w-full md:w-1/2 mx-auto">
+                    <th:block th:replace="~{message :: messageBox}">
+                    </th:block>
+
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Profile Information</h2>
+
+
+                <form th:action="@{'/user/updateProfile'}" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <input type="hidden" name="id" th:value="${user.id}">
+
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <!-- Left Column - Avatar -->
+                        <div class="w-full md:w-1/3 flex flex-col items-center">
+                            <div class="relative mb-4">
+                                <img th:src="@{'/img/user_img/'+${user.imageName}}" alt="avatar"
+                                     class="w-40 h-18 rounded-lg object-cover border-4 border-blue-100 dark:border-gray-600">
+<!--                                <div class="absolute bottom-0 right-0 bg-blue-500 rounded-full p-2 cursor-pointer">-->
+<!--                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />-->
+<!--                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />-->
+<!--                                    </svg>-->
+<!--                                </div>-->
+                            </div>
+
+                            <div class="w-full">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Change Photo</label>
+                                <input type="file" name="file"
+                                       class="block w-full text-sm text-gray-500
+                                              file:mr-4 file:py-2 file:px-4
+                                              file:rounded-md file:border-0
+                                              file:text-sm file:font-semibold
+                                              file:bg-blue-50 file:text-blue-700
+                                              hover:file:bg-blue-100
+                                              dark:file:bg-gray-700 dark:file:text-gray-200
+                                              dark:hover:file:bg-gray-600">
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Form Fields -->
+                        <div class="w-full md:w-2/3 space-y-4">
+                            <div>
+                                <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                              dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                       placeholder="John Doe"
+                                       th:value="${user.fullName}">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                    <input type="email" id="email"  required
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                                  dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                           readonly
+                                           th:value="${user.email}">
+                                </div>
+
+                                <div>
+                                    <label for="mobileNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mobile Number</label>
+                                    <input type="tel" id="mobileNumber" name="mobileNumber" required
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                                  dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                           placeholder="+91 9876543210"
+                                           th:value="${user.mobileNumber}">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="address1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Status</label>
+                                <input type="text" id="address1"  required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                              dark:bg-gray-700 dark:text-green-800 transition duration-200"
+                                       readonly
+
+                                       th:value="${user.isEnable == true ? 'Account Verified' : 'Account Disabled'}"
+                                >
+
+                            </div>
+
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+                                <input type="text" id="address" name="address" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                              dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                       placeholder="123 Main St"
+                                       th:value="${user.address}">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">State</label>
+                                    <input type="text" id="state" name="state" required
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                                  dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                           placeholder="Punjab"
+                                           th:value="${user.state}">
+                                </div>
+
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City</label>
+                                    <input type="text" id="city" name="city" required
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                                  dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                           placeholder="Gujranwala"
+                                           th:value="${user.city}">
+                                </div>
+
+                                <div>
+                                    <label for="pinCode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pin Code</label>
+                                    <input type="text" id="pinCode" name="pinCode" required
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                                  dark:bg-gray-700 dark:text-gray-100 transition duration-200"
+                                           placeholder="90001"
+                                           th:value="${user.pinCode}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit"
+                                class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                                       transition duration-200 shadow-md">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Password Change Section -->
+        <section id="password-change" class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Change Password</h2>
+
+                <form class="space-y-4 max-w-lg"
+                      th:action="@{'/admin/changePassword'}" method="post"
+                >
+                    <div>
+                        <div class="space-y-2">
+                            <label for="currentPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Current Password</label>
+                            <div class="relative">
+                                <input type="password" id="currentPassword" name="currentPassword" required
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-gray-100 pl-10 pr-10 transition duration-200"
+                                       placeholder="••••••••">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                                    <i class="fas fa-eye-slash mr-4 text-gray-400 hover:text-gray-500" id="eyeIconForCurrentPassword"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="space-y-2">
+                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">New Password</label>
+                            <div class="relative">
+                                <input type="password" id="password" name="newPassword" required
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-gray-100 pl-10 pr-10 transition duration-200"
+                                       placeholder="••••••••">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                                    <i class="fas fa-eye-slash mr-4 text-gray-400 hover:text-gray-500" id="eyeIconForPassword"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Confirm Password</label>
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" name="newPassword" required
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-gray-100 pl-10 pr-10 transition duration-200"
+                                       placeholder="••••••••">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                                    <i class="fas fa-eye-slash mr-4 text-gray-400 hover:text-gray-500" id="eyeIconForConfirmPassword"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit"
+                                class="px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700
+                                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+                                       transition duration-200 shadow-md">
+                            Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="script">
+    <script th:src="@{'/js/passwordShowAndHide.js'}"></script>
+    <script>
+        console.log("User Profile Page Loaded");
+
+    </script>
+</div>
+</body>
+</html>

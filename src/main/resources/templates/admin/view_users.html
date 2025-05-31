@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>View Users</title>
+</head>
+<body>
+
+<div id="content">
+    <div class="grid grid-cols-3 mt-4 px-2"></div>
+    <section class="col-span-3 bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 mt-4 mb-4 mr-4 ml-4 overflow-auto">
+        <div class="mx-auto text-center">
+        <h2 class="text-2xl font-semibold font-mono italic mb-4 ">All Users </h2>
+        </div>
+        <div th:replace="~{message :: messageBox}" class="md:w-1/2 mx-auto"> </div>
+        <table class="min-w-full text-sm text-left" >
+            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase tracking-wider">
+            <tr>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Sr. No</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Profile Picture</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Full Name</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Email</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Mobile Number</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Address</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Pin Code</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Role</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Provider</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">City</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">State</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Status</th>
+                <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Action</th>
+            </tr>
+            </thead>
+            <tbody
+            th:if="${users.totalElements>0}"
+            >
+            <!-- Thymeleaf loop -->
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" th:each="user ,c : ${users.getContent()}">
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${c.count}">1</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <img th:src="@{'/img/user_img/'+ ${user.imageName}}" alt="User Image"
+                         onerror="this.src='https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?ga=GA1.1.620845134.1742264155&semt=ais_hybrid&w=740'"
+                         class="w-12 h-12 object-cover rounded shadow-md">
+                </td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.fullName}">Laptop</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.email}">Lenovo 512 MB Ram</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.mobileNumber}">Lenovo 512 MB Ram</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.address}">Electronics</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.pinCode}">1200</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.role}">120</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.provider}">0%</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.city}">1200</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${user.state}">1200</td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium"><span th:text="${user.isEnable == true ? 'Enable' : 'Disable'}" class="italic font-bold"></span></td>
+                <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex space-x-2">
+                        <a th:onclick="updateStatus([[${user.id}]],true)"><i class="fas fa-unlock text-2xl text-blue-700 hover:text-blue-900"></i></a>
+                        <a th:onclick="updateStatus([[${user.id}]],false)"><i class="fas fa-ban text-2xl text-red-700 hover:text-red-900"></i></a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination starts here -->
+        <div class="mt-4 text-center justify-center"
+             th:if="${users.totalElements>0}"
+        >
+
+            <nav aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px text-base h-10">
+                    <li
+                            th:unless="${users.first}"
+                    >
+                        <a  th:href="@{'/admin/users?pageSize='+${pageSize}+'&pageNo='+${users.number-1}}" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Previous</a>
+                    </li>
+                    <li th:each="index : ${#numbers.sequence(0,users.totalPages-1)}">
+                        <a  th:href="@{'/admin/users?pageSize='+${pageSize}+'&pageNo='+${index}}"
+                            th:classappend="${index == users.number ? 'bg-blue-500 dark:bg-blue-800 ' : 'bg-gray-600 dark:bg-gray-800'}"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:text-gray-400  dark:hover:text-white">
+                        <span th:text="${index+1}">1</span>
+
+                        </a>
+                    </li>
+                    <li
+                            th:unless="${users.last}"
+                    >
+                        <a th:href="@{'/admin/users?pageSize='+${pageSize}+'&pageNo='+${users.number+1}}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <h1 th:if="${users.totalElements<=0 }">No User Available</h1>
+        <!-- Pagination ends here -->
+    </section>
+</div>
+
+<div id="script">
+    <script th:src="@{'https://cdn.jsdelivr.net/npm/sweetalert2@11'}"></script>
+    <script th:src="@{/js/deleteSweetAlert.js}"></script>
+    <script>
+        console.log("View Users Page Loaded");
+    </script>
+</div>
+
+</body>
+</html>

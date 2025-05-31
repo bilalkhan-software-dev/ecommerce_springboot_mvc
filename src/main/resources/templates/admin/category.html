@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::#content}, ~{::title}, ~{::#script})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+
+</head>
+<body class=" transition-colors duration-300">
+
+<div id="content" class="p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Add Category Form -->
+        <section class="lg:col-span-1 bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6">
+<!--            message alert-->
+            <div th:replace="~{message :: messageBox}">
+            </div>
+            <h2 class="text-2xl font-semibold mb-4">Add New Category</h2>
+            <form th:action="@{'/admin/saveCategory'}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="space-y-4">
+
+                <div>
+                    <label for="categoryName" class="block text-sm font-medium">Category Name</label>
+                    <input type="text" id="categoryName" name="name" required placeholder="e.g. Electronics"
+                           class="mt-1 block w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                    <div class="flex flex-row space-x-6">
+                        <!-- Active Radio Button -->
+                        <div class="flex items-center">
+                            <input type="radio" id="flexRadioDefault1" name="isActive" value="true" checked
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600">
+                            <label  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="flexRadioDefault1">Active</label>
+                        </div>
+                        <!-- Inactive Radio Button -->
+                        <div class="flex items-center">
+                            <input type="radio" id="flexRadioDefault2"  name="isActive" value="false"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600">
+                            <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="flexRadioDefault2">Inactive</label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload Image</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50
+                                dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help"
+                               id="user_avatar" name="file" type="file">
+                </div>
+
+                    <div class="mb-4 text-center px-6 py-3">
+                        <button type="submit" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
+                                dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Add Category</button>
+                    </div>
+            </form>
+        </section>
+
+        <!-- Category List -->
+        <section class="lg:col-span-2 bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 overflow-auto">
+            <h2 class="text-2xl font-semibold mb-4">Existing Categories</h2>
+            <table class="min-w-full text-sm text-left"
+            th:if="${pageCategories.totalElements>0}"
+            >
+                <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase tracking-wider">
+                <tr>
+                    <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Sr. No</th>
+                    <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Name</th>
+                    <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Image</th>
+                    <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Status</th>
+                    <th class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Thymeleaf loop -->
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" th:each="category ,c : ${pageCategories.getContent()}">
+                    <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${c.count}">1</td>
+                    <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${category.name}">Electronics</td>
+                    <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                        <img th:src="@{'/img/category_img/'+ ${category.imageName}}" alt="Category Image"
+                             class="w-12 h-12 object-cover rounded shadow-md">
+                    </td>
+                    <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-medium" th:text="${category.isActive == true ? 'Active' : 'Inactive'}" >Active</td>
+                    <td class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex space-x-5">
+                            <a th:href="@{'/admin/loadUpdateCategoryPage/'+${category.id}}"><i class="fa-solid fa-pen-to-square text-2xl text-blue-700 hover:text-blue-900"></i></a>
+                            <a th:onclick="deleteCategory([[${category.id}]])"><i class="fa-solid fa-trash text-2xl text-red-700 hover:text-red-900"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination starts here -->
+            <div class="mt-4 text-center justify-center"
+                 th:if="${pageCategories.totalElements>0}"
+            >
+
+                <nav aria-label="Page navigation example">
+                    <ul class="inline-flex -space-x-px text-base h-10">
+                        <li
+                                th:unless="${pageCategories.first}"
+                        >
+                            <a  th:href="@{'/admin/addCategory?pageSize='+${pageSize}+'&pageNo='+${pageCategories.number-1}}" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                Previous</a>
+                        </li>
+                        <li th:each="index : ${#numbers.sequence(0,pageCategories.totalPages-1)}">
+                            <a  th:href="@{'/admin/addCategory?pageSize='+${pageSize}+'&pageNo='+${index}}"
+                                th:classappend="${index == pageCategories.number ? 'bg-blue-500 dark:bg-blue-600': 'bg-gray-600 dark:bg-gray-800'}"
+                                class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    <span th:text="${index+1}">1
+                    </span>
+                            </a>
+                        </li>
+                        <li
+                                th:unless="${pageCategories.last}"
+                        >
+                            <a th:href="@{'/admin/addCategory?pageSize='+${pageSize}+'&pageNo='+${pageCategories.number+1}}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <h1 th:if="${pageCategories.totalElements<=0 }">No Category Available</h1>
+            <!-- Pagination ends here -->
+        </section>
+    </div>
+</div>
+
+<div id="script">
+    <script th:src="@{'https://cdn.jsdelivr.net/npm/sweetalert2@11'}"></script>
+    <script th:src="@{/js/deleteSweetAlert.js}"></script>
+    <script>
+        console.log("Add Category Page Loaded");
+    </script>
+</div>
+
+</body>
+</html>

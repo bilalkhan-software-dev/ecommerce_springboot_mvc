@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content, title, script)"
+      class="dark"
+>
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Default Title</title>
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" th:href="@{/css/input.css}">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+
+    <!-- Flowbite CSS -->
+    <link rel="stylesheet" th:href="@{'https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css'}">
+
+    <!-- Font Awesome -->
+    <link th:href="@{'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'}" rel="stylesheet">
+    <link th:href="@{'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css'}" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" th:href="@{'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'}">
+
+    <!-- sweet alert button CSS -->
+    <link rel="stylesheet" th:href="@{'/css/button.css'}">
+</head>
+
+<body class="min-h-screen bg-gray-300 text-gray-800 dark:bg-gray-800 dark:text-gray-200 pt-16 transition-colors duration-200">
+
+<!-- Navbar -->
+<div th:replace="~{navbar :: navbar}"></div>
+
+<!-- Main Content Area -->
+<main class="flex-grow">
+    <section th:replace="${content}"></section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white shadow-lg border-white-700 py-4
+            dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 dark:shadow-lg mt-20">
+    <div class="container mx-auto text-center">
+        <p>&copy; 2025 BK_QA Shopping Center. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scripts must be in this order -->
+<!-- jQuery first -->
+<script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'}"></script>
+<!-- Then jQuery Validation -->
+<script th:src="@{'https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js'}"></script>
+<!-- Then Flowbite -->
+<script th:src="@{'https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.js'}"></script>
+
+<!-- Your custom validation script -->
+<script th:src="@{'/js/formValidation.js'}"></script>
+
+<!-- Other Page Scripts -->
+<div th:if="${script}" th:replace="${script}"></div>
+</body>
+</html>

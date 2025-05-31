@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base ::layout(~{::#content}, ~{::title}, ~{::#script})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+</head>
+<body>
+
+<div id="content">
+    <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800 p-4">
+        <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left Side - Blue Background with Content -->
+                <div class="bg-blue-500 dark:bg-blue-900 p-8 flex flex-col justify-center items-center text-white">
+                    <div class="text-center max-w-md">
+                        <h2 class="text-3xl font-bold mb-4">Welcome!</h2>
+                        <p class="mb-6">Join our community and start your journey with us today.</p>
+                        <div class="hidden lg:block">
+                            <svg class="w-full h-64" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 200C100 155.8 136.8 120 180 120H320C363.2 120 400 155.8 400 200V300C400 344.2 363.2 380 320 380H180C136.8 380 100 344.2 100 300V200Z" fill="white" fill-opacity="0.2"/>
+                                <circle cx="250" cy="200" r="60" fill="white" fill-opacity="0.3"/>
+                                <path d="M250 280C294.2 280 330 244.2 330 200C330 155.8 294.2 120 250 120C205.8 120 170 155.8 170 200C170 244.2 205.8 280 250 280Z" fill="white"/>
+                                <path d="M250 260C281 260 306 235 306 204C306 173 281 148 250 148C219 148 194 173 194 204C194 235 219 260 250 260Z" fill="#3B82F6"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Form -->
+                <div class="p-8 sm:p-10 bg-gray-200 dark:bg-gray-900">
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Create an Account</h1>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Join us today and get started</p>
+                    </div>
+
+                    <div th:replace="~{message :: messageBox}"></div>
+
+                    <form
+                            th:action="@{'/saveUser'}" method="post" enctype="multipart/form-data" id="userRegistrationForm" novalidate
+                            class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                                <input type="text" id="name" name="fullName" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="Khan">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                                <input type="email" id="email" name="email" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="khan@example.com">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                                <div class="relative">
+                                    <input type="password" id="password" name="password" required
+                                           class="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                           placeholder="••••••••">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+                                        <i class="fas fa-eye-slash text-gray-400 hover:text-gray-500" id="eyeIconForPassword"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                                <div class="relative">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                                           class="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                           placeholder="••••••••">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+                                        <i class="fas fa-eye-slash text-gray-400 hover:text-gray-500" id="eyeIconForConfirmPassword"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+                            <input type="text" id="address" name="address" required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                   placeholder="123 Main St">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="space-y-2">
+                                <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">City</label>
+                                <input type="text" id="city" name="city" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="Gujranwala">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
+                                <input type="text" id="state" name="state" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="Punjab">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="address1" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pin Code</label>
+                                <input type="text" id="address1" name="pinCode" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="75431">
+                            </div>
+                        </div>
+
+                            <div class="space-y-2">
+                                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
+                                <input type="text" id="phone" name="mobileNumber" required
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="+92 31223-4567">
+                            </div>
+
+                        <div class="space-y-2">
+                            <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Image</label>
+                            <input type="file" id="image" name="file"
+                                   class="block w-full text-sm text-gray-500 dark:text-gray-300
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-lg file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-100
+                                          hover:file:bg-blue-100 dark:hover:file:bg-blue-800">
+                        </div>
+                        <div>
+                        <img id="imagePreview" class="mt-2 w-24 h-24 mx-auto  text-center rounded-full hidden"  alt="Image-Preview"  src=""/>
+                        </div>
+                        <div class="flex items-center mt-6">
+                            <input id="terms" type="checkbox" required
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700">
+                            <label for="terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                I agree to the Terms and Conditions.
+                            </label>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit"
+                                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            Already have an account?
+                            <a th:href="@{'/login'}" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                                Sign in
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="script">
+    <script th:src="@{'/js/passwordShowAndHide.js'}">
+            console.log("register page loaded");
+            $("#image").on("change", function () {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#imagePreview").attr("src", e.target.result).removeClass("hidden");
+                };
+                reader.readAsDataURL(this.files[0]);
+            });
+    </script>
+</div>
+</body>
+</html>

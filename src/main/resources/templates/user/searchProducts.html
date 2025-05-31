@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::#content}, ~{::title}, ~{::#script})}">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Searching....</title>
+</head>
+<body>
+<div id="content">
+    <section id="products" class="max-w-7xl mx-auto p-4 grid grid-cols-12 gap-6">
+
+        <!-- Search Bar -->
+        <div class="col-span-12">
+            <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
+                <form
+                        th:action="@{'/search-products'}" method="get" class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative w-full sm:w-auto">
+                        <input type="text" name="search"
+                               id="search-input"
+                               th:value="${searchValue}"
+                               placeholder="Search products..."
+                               class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+
+                        <!-- SUGGESTIONS INSERTED HERE -->
+                        <ul id="suggestion-list"
+                            class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto hidden dark:bg-gray-800 dark:border-gray-700">
+                            <!-- Filled by JavaScript -->
+                        </ul>
+                    </div>
+                    <select name="direction"
+                            class="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                        <option value="desc" th:selected="${direction == 'desc'}">Newest First</option>
+                        <option value="asc" th:selected="${direction == 'asc' or direction == null}">Oldest First</option>
+                    </select>
+                    <button type="submit"
+                            class="inline-flex items-center py-2.5 px-3 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                        Search
+                    </button>
+                    <a th:href="@{'/products'}"
+                       class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+                        Clear
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filter Sidebar -->
+        <aside class="col-span-12 md:col-span-3">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow p-6 mt-4">
+                <h2 class="text-lg font-semibold text-center text-gray-800 dark:text-gray-200 mb-4">Filter by Category</h2>
+
+                <!-- Mobile Dropdown -->
+                <div class="block md:hidden mb-4">
+                    <form method="get" th:action="@{/search-products}" class="flex flex-col gap-2">
+                        <input type="hidden" name="search" th:value="${keyword}" />
+                        <select name="category"
+                                class="px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                            <option th:selected="${paramValue == null || paramValue == ''}" value="">All Categories</option>
+                            <option th:each="category : ${categories.getContent()}"
+                                    th:value="${category.name}"
+                                    th:text="${category.name}"
+                                    th:selected="${paramValue == category.name}">
+                            </option>
+                        </select>
+                        <button type="submit"
+                                class="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition font-medium">
+                            Apply Filter
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Desktop List -->
+                <ul class="space-y-2 hidden md:block">
+                    <li>
+                        <a th:href="@{/search-products(search=${keyword})}"
+                           th:classappend="${paramValue == null || paramValue == ''} ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 dark:hover:bg-gray-700'"
+                           class="block px-4 py-2 rounded-md font-medium text-sm dark:text-gray-200 transition">
+                            All Categories
+                        </a>
+                    </li>
+                    <li th:each="category : ${categories.getContent()}">
+                        <a th:href="@{/search-products(search=${keyword}, category=${category.name}, pageSize=${pageSize})}"
+                           th:classappend="${paramValue == category.name} ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 dark:hover:bg-gray-700'"
+                           class="block px-4 py-2 rounded-md font-medium text-sm dark:text-gray-200 transition"
+                           th:text="${category.name}">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <section class="col-span-12 md:col-span-9">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 mt-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                        <span th:if="${paramValue != null && paramValue != ''}" th:text="'Products in ' + ${paramValue}"></span>
+                        <span th:unless="${paramValue != null && paramValue != ''}">All Products</span>
+                    </h2>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                        Showing <span th:text="${products.number * products.size + 1}"></span>-<span
+                            th:text="${(products.number * products.size) + products.numberOfElements}"></span> of <span
+                            th:text="${products.totalElements}"></span> products
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div th:if="${products.totalElements <= 0}" class="col-span-12 text-center py-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <h3 class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">No Products found</h3>
+                        <p class="mt-2 text-gray-500 dark:text-gray-400">
+                            <span th:if="${paramValue != null && paramValue != ''}" th:text="'No products available in ' + ${paramValue} + ' category'"></span>
+                            <span th:unless="${paramValue != null && paramValue != ''}">No products match to your search. Try something different.</span>
+                        </p>
+                    </div>
+
+                    <!-- Product Card -->
+                    <div th:each="prod : ${products.getContent()}"
+                         class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all p-5 flex flex-col justify-between">
+                        <img th:src="@{'/img/product_img/' + ${prod.imageName}}" alt="Product-Image"
+                             class="w-full h-48 object-contain rounded mb-4 bg-gray-50 dark:bg-gray-700" />
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2" th:text="${prod.title}"></h4>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-blue-600 dark:text-blue-400 font-bold text-base" th:text="'Rs. ' + ${prod.discountPrice}"></span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400 line-through" th:text="'Rs. ' + ${prod.price}"></span>
+                        </div>
+                        <div class="mb-4">
+                            <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded dark:bg-green-900 dark:text-green-300"
+                                  th:text="${prod.discount} + '% OFF'"></span>
+                        </div>
+                        <a th:href="@{'/productDetails/' + ${prod.id}}"
+                           class="block bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition font-medium">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <div class="col-span-12 mt-4" th:if="${products.totalElements > 0}">
+            <nav class="flex items-center justify-center">
+                <ul class="inline-flex items-center space-x-1 text-base">
+                    <!-- Prev -->
+                    <li th:unless="${products.first}">
+                        <a th:href="@{/search-products(search=${keyword},category=${paramValue}, pageNo=${products.number-1}, pageSize=${pageSize},direction=${direction})}"
+                           class="px-4 py-2 border rounded-l-lg bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition">
+                            Previous
+                        </a>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="index : ${#numbers.sequence(0, products.totalPages-1)}">
+                        <a th:href="@{/search-products(search=${keyword},category=${paramValue}, pageNo=${index}, pageSize=${pageSize},direction=${direction})}"
+                           th:classappend="${index == products.number} ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
+                           class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded transition">
+                            <span th:text="${index+1}">1</span>
+                        </a>
+                    </li>
+
+                    <!-- Next -->
+                    <li th:unless="${products.last}">
+                        <a th:href="@{/search-products(search=${keyword},category=${paramValue}, pageNo=${products.number+1}, pageSize=${pageSize},direction=${direction})}"
+                           class="px-4 py-2 border rounded-r-lg bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </section>
+</div>
+
+<div id="script">
+    <script th:src="@{'/js/searchProductSuggesstion.js'}">
+        console.log("Products page loaded");
+    </script>
+</div>
+</body>
+</html>
