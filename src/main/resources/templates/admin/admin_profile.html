@@ -29,7 +29,9 @@
                         <!-- Left Column - Avatar -->
                         <div class="w-full md:w-1/3 flex flex-col items-center">
                             <div class="relative mb-4">
-                                <img th:src="@{'/img/admin_img/'+${user.imageName}}" alt="avatar"
+                                <img th:src="@{'/img/admin_img/'+${user.imageName}}"
+                                     onerror="this.src='https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?ga=GA1.1.620845134.1742264155&semt=ais_hybrid&w=740'"
+                                     alt="avatar"
                                      class="w-40 h-18 rounded-lg object-cover border-4 border-blue-100 dark:border-gray-600">
                             </div>
 
