@@ -39,35 +39,33 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-            http.csrf(AbstractHttpConfigurer::disable)
-                    .cors(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(request->{
-                        request .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**").hasRole("USER")
-                                .anyRequest()
-                                .permitAll();
-                    }
-                    ).formLogin(formLogin-> {
-                        formLogin.loginPage("/login")
-                                .loginProcessingUrl("/do-login")
-                                .successHandler(authSuccessHandler)
-                                .failureHandler(failureHandler).
-                                usernameParameter("email").passwordParameter("password")
-                        ;
-                    }
-                    ).logout(logout -> {
-                        logout.logoutUrl("/do-logout").logoutSuccessUrl("/login?logout=true") ;
-                    })
-//                                    oAuth Configure
-                            .oauth2Login(oAuthLogin
-                                    -> oAuthLogin
-                                    .loginPage("/login")
-                                    .userInfoEndpoint(userIno ->
-                                        userIno.userService(customOAuth2UserService)
-                                    )
-                                    .successHandler(authSuccessHandler)
-                            );
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasRole("USER")
+                        .anyRequest().permitAll()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/do-login")
+                        .successHandler(authSuccessHandler)
+                        .failureHandler(failureHandler)
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/do-logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                )
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .userInfoEndpoint(user -> user
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler(authSuccessHandler)
+                );
 
         return http.build();
     }

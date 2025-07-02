@@ -24,10 +24,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // Find user by email
         String email = oAuth2User.getAttribute("email");
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        String userRole = userRepo.findByEmail(email)
+                .map(User::getRole)
+                .orElse("ROLE_USER");
+
 
         // Adding a role from DB as granted authority
-        var authorities = List.of(new SimpleGrantedAuthority(user.getRole()));
+        var authorities = List.of(new SimpleGrantedAuthority(userRole));
 
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "email");
     }

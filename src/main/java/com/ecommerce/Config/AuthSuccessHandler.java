@@ -7,6 +7,7 @@ import com.ecommerce.Repository.UserRepo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,20 +25,15 @@ import java.util.Set;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
-
 
     private final UserRepo userRepo;
 
-    @Autowired
-    public AuthSuccessHandler(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Set<String> roles = AuthorityUtils.authorityListToSet(authorities);
-
 
         log.info("Authentication type: {}", authentication.getClass().getName());
 
@@ -48,6 +44,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
             // Get OAuth user attributes
             var oAuthUser = (DefaultOAuth2User) principal.getPrincipal();
+
             log.info("OAuth2 User Attributes:");
             oAuthUser.getAttributes().forEach((key, value) -> log.info("{} : {}", key, value));
 
@@ -79,6 +76,11 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 default -> log.warn("Unknown OAuth2 provider: {}", authorizedClientRegisteredId);
             }
 
+
+            if (userRepo.findByEmail(user.getEmail()).isEmpty()) {
+                log.info("New OAuth2 user: {}", user.getEmail());
+            }
+
             // Save user if not exists
             User userFromDB = userRepo.findByEmail(user.getEmail()).orElse(null);
             if (userFromDB == null) {
@@ -86,7 +88,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 log.info("User saved successfully: {}", user.getEmail());
             }
         }
-
 
         String redirectURL = roles.contains(AppConstant.ROLE_ADMIN) ? "/admin/dashboard" : "/home";
         new DefaultRedirectStrategy().sendRedirect(request, response, redirectURL);
