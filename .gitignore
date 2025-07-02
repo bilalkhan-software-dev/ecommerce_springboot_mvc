@@ -8,7 +8,6 @@ target/
 .vscode/
 
 
-# Keep your existing rules and add/modify these:
 /target/
 !src/main/resources/static/css/output.css  # Keep the built CSS
 
@@ -22,7 +21,6 @@ npm-debug.log*
 *.iws
 *.ipr
 
-src/main/resources/application-prod.properties
 client_secret_209364414487-401jb68lf8k8kd5o3i8v64k6q5113pn0.apps.googleusercontent.com.json
 keyFile.txt
 tailwind.config.js
