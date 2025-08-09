@@ -61,5 +61,5 @@ Browse product and category catalog with **pagination**
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/e-commerce.git
+git clone https://github.com/bilalkhan-software-dev/ecommerce_springboot_mvc.git
 cd e-commerce
