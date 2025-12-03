@@ -62,4 +62,4 @@ Browse product and category catalog with **pagination**
 
 ```bash
 git clone https://github.com/bilalkhan-software-dev/ecommerce_springboot_mvc.git
-cd e-commerce
+cd ecommerce_springboot_mvc
